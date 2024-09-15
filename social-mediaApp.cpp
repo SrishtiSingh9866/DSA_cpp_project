@@ -1,9 +1,11 @@
+//FRIENDSHIP SYSTEM
 #include <iostream>
 #include <map>
 #include <set>
+#include <string>
+
 using namespace std;
 
-// Class representing a User
 class User {
 public:
     string firstName;
@@ -11,7 +13,8 @@ public:
     int age;
     string gender;
 
-    User() {}
+    User() {};
+
     User(string firstName, string lastName, int age, string gender) {
         this->firstName = firstName;
         this->lastName = lastName;
@@ -20,62 +23,91 @@ public:
     }
 };
 
-// Global maps for users and friendships
+// MAP user-name to USER
 map<string, User> mapUserName;
+
+// MAPPING ONE FRIEND TO ANOTHER FRIEND
 map<string, set<string>> Friends;
 
-// Function to add a user
 void addUser(string userName, User user) {
     if (mapUserName.find(userName) == mapUserName.end()) {
         mapUserName[userName] = user;
-        cout << "User added successfully: " << userName << endl;
     } else {
-        cout << "UserName Already Taken" << endl;
+        cout << "UserName Already Taken\n";
     }
 }
 
-// Function to make two users friends
 void makeThemFriend(string userName1, string userName2) {
-    Friends[userName1].insert(userName2);
-    Friends[userName2].insert(userName1);
-    cout << userName1 << " and " << userName2 << " are now friends." << endl;
-}
-
-// Function to display all registered users
-void displayAllUsers() {
-    cout << "All Registered Users:\n";
-    for (auto& user : mapUserName) {
-        cout << "UserName: " << user.first << ", Name: " << user.second.firstName << " " << user.second.lastName << endl;
+    if (mapUserName.find(userName1) != mapUserName.end() && mapUserName.find(userName2) != mapUserName.end()) {
+        Friends[userName1].insert(userName2);
+        Friends[userName2].insert(userName1);
+    } else {
+        cout << "One or both usernames do not exist\n";
     }
 }
 
-// Function to display all friendships
+void displayAllUser() {
+    for (auto i : mapUserName) {
+        cout << "UserName: " << i.first << " " << i.second.firstName << " " << i.second.lastName << "\n";
+    }
+}
+
 void displayAllFriendships() {
-    cout << "All Friendships:\n";
-    for (auto& pair : Friends) {
-        cout << pair.first << " -> ";
-        for (auto& friendName : pair.second) {
-            cout << friendName << " ";
+    for (auto i : Friends) {
+        cout << i.first << " -> ";
+        set<string> friends = i.second;
+        for (auto j : friends) {
+            cout << j << " ";
         }
-        cout << endl;
+        cout << "\n";
     }
 }
 
 int main() {
-    // Creating users
-    User alice("Alice", "Mishra", 30, "Female");
-    User bob("Bob", "Ali", 27, "Male");
+    string userName, firstName, lastName, gender;
+    int age;
 
-    // Adding users to the system
-    addUser("Alice", alice);
-    addUser("Bob", bob);
+    // Taking input for the first user
+    cout << "Enter the first user's details:\n";
+    cout << "Enter UserName: ";
+    cin >> userName;
+    cout << "Enter First Name: ";
+    cin >> firstName;
+    cout << "Enter Last Name: ";
+    cin >> lastName;
+    cout << "Enter Age: ";
+    cin >> age;
+    cout << "Enter Gender: ";
+    cin >> gender;
 
-    // Making Alice and Bob friends
-    makeThemFriend("Alice", "Bob");
+    User user1(firstName, lastName, age, gender);
+    addUser(userName, user1);
 
-    // Displaying all registered users and friendships
-    displayAllUsers();
+    // Taking input for the second user
+    cout << "\nEnter the second user's details:\n";
+    cout << "Enter UserName: ";
+    cin >> userName;
+    cout << "Enter First Name: ";
+    cin >> firstName;
+    cout << "Enter Last Name: ";
+    cin >> lastName;
+    cout << "Enter Age: ";
+    cin >> age;
+    cout << "Enter Gender: ";
+    cin >> gender;
+
+    User user2(firstName, lastName, age, gender);
+    addUser(userName, user2);
+
+    // Making the two users friends
+    string userName1, userName2;
+    cout << "\nEnter the usernames of the two users you want to make friends:\n";
+    cout << "Enter the first UserName: ";
+    cin >> userName1;
+    cout << "Enter the second UserName: ";
+    cin >> userName2;
+    makeThemFriend(userName1, userName2);
+
+    // Display all friendships
     displayAllFriendships();
-
-    return 0;
 }
